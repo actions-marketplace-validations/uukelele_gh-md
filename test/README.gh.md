@@ -19,6 +19,8 @@
     <h3 title="{{ project.description }}">
       {{ project.name }}
       •
+      ⭐ {{ project.stargazers_count }} • 🍴 {{ project.forks_count }}
+      •
       <a href="{{ project.html_url }}"><kbd>GitHub</kbd></a>
     </h3>
   </template>

@@ -38,6 +38,20 @@ STRING: /"[^"]*"/ | /'[^']*'/
 _WS: /[ \t\n\r]+/
 """)
 
+def dedent(text: str) -> str:
+    lines = text.split('\n')
+    if not lines:
+        return text
+    indent = None
+    for line in lines:
+        if line.strip():
+            spaces = len(line) - len(line.lstrip())
+            if indent is None or spaces < indent:
+                indent = spaces
+    if indent is None or indent == 0:
+        return text
+    return '\n'.join(line[indent:] if line.strip() else line for line in lines)
+
 def apply_font(text: str, font_name: str) -> str:
     if font_name not in FONTS:
         # Just like a browser, we are trying to minimize errors here.
@@ -121,10 +135,14 @@ class Compiler(Transformer):
     def RAW_TEXT(self, items): return str(items[0])
 
     def block_tag(self, items):
+        inner = str(items[2])
+        if inner.startswith('\n'):
+            inner = dedent(inner)
+        inner = inner.strip()
         match str(items[0]):
-            case 'center': return f'<div align="center">\n{items[2]}\n</div>'
+            case 'center': return f'<div align="center">\n{inner}\n</div>'
 
-            case _: return f'<{items[0]}>{items[2]}</{items[0]}>'
+            case _: return f'<{items[0]}>{inner}</{items[0]}>'
             
     def inline_tag(self, items):
         match str(items[0]):
@@ -141,6 +159,7 @@ class Compiler(Transformer):
     def projects_tag(self, items):
         attrs = items[0]
         template = str(items[1]).removeprefix('<template>').removesuffix('</template>')
+        template = dedent(template).strip()
 
         limit = int(attrs.get('limit', 3) if str(attrs.get('limit', 3)).isdigit() else 3)
         sort  = attrs.get('sort', 'stars')
@@ -191,13 +210,13 @@ class Compiler(Transformer):
         dark_url  = f"{base_url}{route}?{dark_qs}"
         light_url = f"{base_url}{route}?{light_qs}"
 
-        return f'''
+        return dedent(f'''
 <picture>
     <source media="(prefers-color-scheme: dark)"  srcset="{dark_url}"  />
     <source media="(prefers-color-scheme: light)" srcset="{light_url}" />
     <img alt="GitHub Stats" src="{light_url}" />
 </picture>
-'''
+''')
     
     def render_devicon(self, attrs):
         name = attrs.get('name', 'github')
