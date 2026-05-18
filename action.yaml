@@ -1,0 +1,50 @@
+name: 'gh-md'
+description: 'A preprocessor for GitHub README files that allows simple expressions converted into markdown that pops.'
+author: 'uukelele'
+branding:
+  icon: 'file-text'
+  color: 'purple'
+
+inputs:
+  input-file:
+    description: 'Input file to compile (default: README.gh.md)'
+    required: false
+    default: 'README.gh.md'
+  output-file:
+    description: 'Output file (default: README.md)'
+    required: false
+    default: 'README.md'
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install gh-md
+      run: pip install gh-md
+      shell: bash
+
+    - name: Compile
+      run: |
+        gh-md "${{ inputs.input-file }}" --output "${{ inputs.output-file }}"
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_USER: ${{ github.repository_owner }}
+
+    - name: Commit changes
+      run: |
+        if [ -f "${{ inputs.output-file }}" ]; then
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add "${{ inputs.output-file }}"
+          git commit -m "build: ${{ inputs.output-file }} [skip ci]" || true
+          git push || true
+        fi
+      shell: bash
