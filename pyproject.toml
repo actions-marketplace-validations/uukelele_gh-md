@@ -1,5 +1,5 @@
 [project]
-name = "gh-md"
+name = "gh-md-action"
 version = "1.0.0"
 description = "A preprocessor for GitHub README files that allows simple expressions converted into markdown that pops."
 readme = "README.md"
