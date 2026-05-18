@@ -104,9 +104,15 @@ class Compiler(Transformer):
         value = str(items[-1])[1:-1]
         return (key, value)
 
-    def ATTR_NAME(self, items): return str(items[0])
+    def ATTR_NAME(self, items):
+        if isinstance(items, list):
+            return str(items[0])
+        return str(items)
 
-    def STRING(self, items): return str(items[0])
+    def STRING(self, items):
+        if isinstance(items, list):
+            return str(items[0])
+        return str(items)
 
     def text(self, items): return str(items[0])
 

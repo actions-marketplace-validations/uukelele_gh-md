@@ -9,9 +9,8 @@
 
 ## <font="mono">STUFF</font>
 
-<font="double">STUFF</font>
-
-<img src="https://landsat.c00l.site/svg?text=stuff&embed_image=true&attribution=true" />
+<font="double">Many custom fonts are supported!</font>
+<font="Funky">They also work well with screen-readers.</font>
 
 # <font="mono">PROJECTS</font>
 
@@ -20,7 +19,7 @@
     <h3 title="{{ project.description }}">
       {{ project.name }}
       •
-      <a href="{{ project.urls['GitHub'] }}"><kbd>GitHub</kbd></a>
+      <a href="{{ project.html_url }}"><kbd>GitHub</kbd></a>
     </h3>
   </template>
 </projects>
