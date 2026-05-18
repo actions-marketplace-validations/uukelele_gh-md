@@ -169,7 +169,7 @@ class Compiler(Transformer):
 
         t = Template(template)
 
-        return '\n'.join([t.render(project=project) for project in projects])
+        return compile('\n'.join([t.render(project=project) for project in projects]))
     
     def render_badge(self, attrs):
         ltext = urllib.parse.quote(attrs.get("ltext", "").replace(" ", "_"))
