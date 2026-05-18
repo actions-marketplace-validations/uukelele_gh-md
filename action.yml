@@ -27,7 +27,7 @@ runs:
         python-version: '3.11'
 
     - name: Install gh-md
-      run: pip install .
+      run: pip install gh-md
       shell: bash
 
     - name: Compile
