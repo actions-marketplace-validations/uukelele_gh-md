@@ -1,0 +1,27 @@
+[project]
+name = "gh-md"
+version = "0.1.0"
+description = "A preprocessor for GitHub README files that allows simple expressions converted into markdown that pops."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
+    "lark>=1.3.1",
+    "typer>=0.25.1",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+ghmd = "gh_md.cli:app"
+gh-md = "gh_md.cli:app"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["gh_md*"]
